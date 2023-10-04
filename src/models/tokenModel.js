@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
 
-const Token = new mongoose.Schema({
+const tokenModel = new mongoose.Schema({
     user:{type:mongoose.Types.ObjectId, ref:'User'},
     refreshToken:{type: String, required:true}
 })
-export default mongoose.model('Token',Token)
+
+const Token = mongoose.model('Token',tokenModel)
+export default Token
