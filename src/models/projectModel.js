@@ -25,5 +25,5 @@ const projectSchema = new mongoose.Schema({
     }
 })
 
-const Project = mongoose.model('Project', projectSchema)
-export default Project
+const ProjectModel = mongoose.model('Project', projectSchema)
+export default ProjectModel

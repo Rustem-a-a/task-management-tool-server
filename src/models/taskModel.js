@@ -43,7 +43,7 @@ const taskSchema = new mongoose.Schema({
     },
     subtasks: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task'
+        ref: 'TaskModel'
     }],
     comments:[
         {
@@ -58,5 +58,5 @@ const taskSchema = new mongoose.Schema({
 
 })
 
-const Task = mongoose.model('Task', taskSchema)
-export default Task
+const TaskModel = mongoose.model('Task', taskSchema)
+export default TaskModel
