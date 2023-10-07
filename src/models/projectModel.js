@@ -1,13 +1,16 @@
 import mongoose from "mongoose";
+import Task from './taskModel.js'
+import User from "./userModel.js";
 
 const projectSchema = new mongoose.Schema({
-    name: {type: String, required: true},
+    name: {type: String, required: true, unique:true},
     start: {
         type: Date,
         default: Date.now()
     },
     finish: {
         type:Date,
+        default: Date.now()
     },
     deadline: {
         type:Date,
@@ -25,5 +28,5 @@ const projectSchema = new mongoose.Schema({
     }
 })
 
-const ProjectModel = mongoose.model('Project', projectSchema);
+    const ProjectModel = mongoose.model('Project', projectSchema);
 export default ProjectModel;
