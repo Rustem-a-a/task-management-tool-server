@@ -3,17 +3,20 @@ import Task from './taskModel.js'
 import User from "./userModel.js";
 
 const projectSchema = new mongoose.Schema({
-    name: {type: String, required: true, unique:true},
+    name: {
+        type: String,
+        required: true,
+        unique: true},
     start: {
         type: Date,
         default: Date.now()
     },
     finish: {
-        type:Date,
+        type: Date,
         default: Date.now()
     },
     deadline: {
-        type:Date,
+        type: Date,
         default: Date.now()
     },
     tasks: [
@@ -22,11 +25,15 @@ const projectSchema = new mongoose.Schema({
             ref: 'Task'
         }
     ],
-    author:{
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    columnId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Column'
     }
 })
 
-    const ProjectModel = mongoose.model('Project', projectSchema);
+const ProjectModel = mongoose.model('Project', projectSchema);
 export default ProjectModel;

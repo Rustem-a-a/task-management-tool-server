@@ -5,8 +5,7 @@ class ProjectControllers {
 
     async createProject(req, res, next) {
         try {
-            const {user,name,start,finish,deadline} = req.body
-            const project = await ProjectService.createProject({user,name,start,finish,deadline})
+            const project = await ProjectService.createProject(req.body)
             return res.status(200).json(project);
         } catch (e) {
             next(e)

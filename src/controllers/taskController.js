@@ -1,11 +1,11 @@
 import TaskService from "../service/TaskService.js";
 import Task from "../models/taskModel.js";
+import Project from "../models/projectModel.js";
 
 class TaskControllers {
 
     async createTask(req, res, next) {
         try {
-            console.log(req.body)
             const task = await TaskService.createTask(req.body)
             return res.status(200).json(task);
         } catch (e) {
@@ -22,18 +22,25 @@ class TaskControllers {
     }
     async deleteTask(req, res, next) {
         try {
-            const id = req.params.id
-            const deletedTask = await TaskService.delete(id)
+            const {projectId, taskId,parentId} = req.params
+            const deletedTask = await TaskService.delete({projectId, taskId,parentId})
             res.status(200).json(deletedTask)
         } catch (e) {
             next(e)
         }
     }
-    async getTasks(req, res, next) {
+    async getProjectTasks(req, res, next) {
         try {
-            const user = req.body.user.id
-            const tasks = await Task.find({author:user,title: 'Name'})
-            res.status(200).json(tasks)
+            const {projectId} = req.params
+            const query = await Project.findById(projectId).select(['columnId','tasks']).populate(['columnId','tasks'])
+            const tasksResponse = query.tasks.reduce((ac,v)=>{
+                ac[v._id] = v
+                return ac
+            },{})
+            res.status(200).json({
+                columns:query.columnId.columns,
+                tasks:tasksResponse
+            })
         } catch (e) {
             next(e)
         }

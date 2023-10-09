@@ -1,37 +1,53 @@
 import Project from "../models/projectModel.js";
 import ApiError from "../exceptions/apiError.js";
+import Column from "../models/columnModel.js";
+import Task from "../models/taskModel.js";
 
-
+const exampleData = {
+    columns: {
+        'column-1': {
+            id: 'column-1',
+            title: 'Queue',
+            taskIds: [],
+        },
+        'column-2': {
+            id: 'column-2',
+            title: 'Development',
+            taskIds: [],
+        },
+        'column-3': {
+            id: 'column-3',
+            title: 'Done',
+            taskIds: [],
+        },
+    },
+};
 class ProjectService{
-    async createProject ({user,name,start,finish,deadline}){
-        const possibleProject = await Project.findOne({name});
+    async createProject (project){
+        const possibleProject = await Project.findOne({name:project.name});
         if (possibleProject) {
-            throw ApiError.BadRequest( `Project with name ${name} has existed`);
+            throw ApiError.BadRequest( `Project with name ${project.name} has existed`);
         }
-        const project = await Project.create({name, start, finish, deadline, author: user.id})
-        await project.populate({
-                path: 'author',
-                select: 'username'
-            })
-        return project
+        const columnsData = new Column(exampleData);
+        const column = await columnsData.save()
+        const createdProject = await Project.create({...project, author: project.user.id,columnId:column._id})
+        return createdProject
     }
-    async edit ({id, name,start,finish,deadline}){
-        const project = await Project.findById(id);
+    async edit (editData){
+        const project = await Project.findById(editData._id);
         if (!project) {
-            throw ApiError.BadRequest( `Project with id ${id} not found`);
+            throw ApiError.BadRequest( `Project with id ${editData._id} not found`);
         }
-        if(name) project.name=name
-        if(start) project.start=start
-        if(finish) project.finish=finish
-        if(deadline) project.deadline=deadline
-        await project.save()
-        return project
+        const updatedProject = await Project.findByIdAndUpdate(editData._id,editData,{new:true})
+        return updatedProject
     }
     async delete (id) {
         const project = await Project.findById(id);
         if (!project) {
             throw ApiError.BadRequest( `Project with id ${id} not found`);
         }
+        await Column.deleteMany({ _id: { $in: project.columnId} })
+        await Task.deleteMany({ _id: { $in: project.tasks} })
         const deletedProject = await project.deleteOne()
         return deletedProject
     }

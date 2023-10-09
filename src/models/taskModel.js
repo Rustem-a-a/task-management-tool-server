@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import ApiError from "../exceptions/apiError.js";
 
 const taskSchema = new mongoose.Schema({
 
@@ -44,7 +45,7 @@ const taskSchema = new mongoose.Schema({
     subtasks: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'TaskModel'
+            ref: 'Task'
         }
     ],
     comments: [
@@ -57,9 +58,6 @@ const taskSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    projectId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Project'}
 })
 
 const TaskModel = mongoose.model('Task', taskSchema);

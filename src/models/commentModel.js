@@ -7,7 +7,13 @@ const commentSchema = new mongoose.Schema({
     author:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    subcomments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ]
 
 })
 
