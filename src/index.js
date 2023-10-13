@@ -7,8 +7,8 @@ import authRouter from "./router/authRouter.js";
 import projectRouter from "./router/projectRouter.js";
 import taskRouter from "./router/taskRouter.js";
 import columnRouter from "./router/columnRouter.js";
-
 import errorMiddleware from "./middlewares/ErrorMiddleware.js";
+import commentRouter from "./router/commentRouter.js";
 const PORT = process.env.PORT || 5000;
 const app= express();
 
@@ -23,8 +23,10 @@ app.use(cors(
 ));
 app.use('/project',projectRouter);
 app.use('/task',taskRouter);
+app.use('/comment',commentRouter);
 app.use('/column',columnRouter);
 app.use('/auth',authRouter);
+
 app.use(errorMiddleware);
 const start = async ()=>{
     try{

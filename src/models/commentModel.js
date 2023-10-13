@@ -1,12 +1,17 @@
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-    name: {
-        type: String
+    text: {
+        type: String,
+        required: true,
     },
-    author:{
+    author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User', // Ссылка на модель пользователя, если комментарии привязаны к пользователям
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
     subcomments: [
         {

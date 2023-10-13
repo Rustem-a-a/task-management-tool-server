@@ -5,12 +5,25 @@ import Project from "../models/projectModel.js";
 
 class TaskService{
 async createTask (task){
-    const possibleTask = await Task.findOne({title:task.title});
-    if (possibleTask) {
+    if(!task.parentId){
+    const possibleTask = await Project
+        .findById(task.projectId)
+        .select('tasks -_id ')
+        .populate({path: 'tasks', select:'-_id title'})
+    if (JSON.stringify(possibleTask).includes(task.title)) {
         throw ApiError.BadRequest( `Project with name ${task.title} has existed`);
+    }}
+    if(task.parentId){
+        const possibleTask = await Task
+            .findById(task.parentId)
+            .select('subtasks -_id ')
+            .populate({path: 'subtasks', select:'-_id title'})
+        if (JSON.stringify(possibleTask).includes(task.title)) {
+            throw ApiError.BadRequest( `Project with name ${task.title} has existed`);
+        }
     }
     const newTask = await Task.create({...task,author:task.user.id})
-    await Project.updateOne({ _id: task.projectId}, { $push: { tasks: newTask._id } })
+    await Project.updateOne({_id: task.projectId}, { $push: { tasks: newTask._id } })
     if(task.parentId){
         await Task.updateOne({ _id: task.parentId}, { $push: { subtasks: newTask._id } })
     }
