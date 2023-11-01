@@ -28,7 +28,8 @@ class ProjectService{
         if (possibleProject) {
             throw ApiError.BadRequest( `Project with name ${project.name} has existed`);
         }
-        const columnsData = new Column(exampleData);
+        console.log(11111)
+        const columnsData = new Column({columns: exampleData.columns});
         const column = await columnsData.save()
         const createdProject = await Project.create({...project, author: project.user.id,columnId:column._id})
         return createdProject

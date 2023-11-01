@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mpath from "mongoose-mpath";
 
 const commentSchema = new mongoose.Schema({
     text: {
@@ -6,8 +7,7 @@ const commentSchema = new mongoose.Schema({
         required: true,
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Ссылка на модель пользователя, если комментарии привязаны к пользователям
+        type: String
     },
     createdAt: {
         type: Date,
@@ -18,7 +18,14 @@ const commentSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Comment'
         }
-    ]
+    ],
+    child:{
+        type:Boolean,
+        default:false
+    },
+    parentId:{
+        type:String
+    }
 
 })
 

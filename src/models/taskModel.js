@@ -10,36 +10,40 @@ const taskSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: true,
+        // required: true,
         default: 'Description'
 
+    },
+    child:{
+        type:Boolean,
+        default:false
     },
     start: {
         type: Date,
         default: Date.now(),
-        required: true
+        // required: true
     },
     workTime: {
         type: Date,
         default: Date.now(),
-        required: true
+        // required: true
     },
     deadline: {
         type: Date,
         default: Date.now(),
-        required: true
+        // required: true
     },
     priority: {
         type: String,
-        required: true,
+        // required: true,
         default: '1'
     },
-    attachments: {
+    attachments: [{
         type: String
-    },
+    }],
     status: {
         type: String,
-        required: true,
+        // required: true,
         default: 'Queue'
     },
     subtasks: [
@@ -51,7 +55,7 @@ const taskSchema = new mongoose.Schema({
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comments'
+            ref: 'Comment'
         }
     ],
     author: {

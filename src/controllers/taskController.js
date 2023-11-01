@@ -15,6 +15,7 @@ class TaskControllers {
     async editTask(req, res, next) {
         try {
             const updatedTask = await TaskService.edit(req.body)
+            console.log(updatedTask)
             res.status(200).json(updatedTask)
         } catch (e) {
             next(e)
@@ -42,6 +43,16 @@ class TaskControllers {
                 tasks:tasksResponse
             })
         } catch (e) {
+            next(e)
+        }
+    }
+
+    async getSubtasks (req,res,next){
+        try{
+            const {taskId} = req.params
+            const subtasks = await Task.findById(taskId).select('-_id subtasks').populate('subtasks')
+            res.status(200).json(subtasks)
+        }catch (e) {
             next(e)
         }
     }

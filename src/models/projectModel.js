@@ -6,18 +6,22 @@ const projectSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true},
+        unique: true
+    },
     start: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        required: true
     },
     finish: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        required: true
     },
     deadline: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        required: true
     },
     tasks: [
         {

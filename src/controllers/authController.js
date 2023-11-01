@@ -57,23 +57,9 @@ class AuthControllers {
     async refresh(req, res, next) {
         try {
             const {refreshToken} = req.cookies;
-            console.log(refreshToken)
-            const userDataFromToken = await TokenService.validateRefreshToken(refreshToken);
-            console.log(userDataFromToken)
-            const foundToken = await TokenService.findToken(refreshToken);
-            if (!userDataFromToken || !foundToken){
-                return res.status(401).json({message: 'Error of authContollers of refresh'});
-            }
-            const user = await User.findOne({_id: userDataFromToken.id});
-            const userDto = new UserDto(user);
-            const tokens = TokenService.generateToken({...userDto});
-            await TokenService.saveToken(userDto.id, tokens.refreshToken);
-            res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
-            res.json(
-                {
-                    user: userDto,
-                    ...tokens
-                })
+            const userData = await userService.refresh(refreshToken);
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+            return res.status(200).json({...userData});
         } catch (e) {
             next(e);
         }

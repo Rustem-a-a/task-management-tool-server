@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.post('/upload',authMiddleware,upload.single('file'),LoadingController.uploadFile)
+router.post('/upload',upload.single('file'),authMiddleware,LoadingController.uploadFile)
 router.get('/download/:filename',authMiddleware,LoadingController.downloadFile)
 
 export default router

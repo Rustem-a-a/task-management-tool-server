@@ -5,6 +5,7 @@ class ProjectControllers {
 
     async createProject(req, res, next) {
         try {
+            console.log(111111111111111111111111111111111)
             const project = await ProjectService.createProject(req.body)
             return res.status(200).json(project);
         } catch (e) {
@@ -30,7 +31,7 @@ class ProjectControllers {
     }
     async getProjects(req, res, next) {
         try {
-            const projects = await Project.find()
+            const projects = await Project.find({author: req.body.user.id})
             res.status(200).json(projects)
         } catch (e) {
             next(e)

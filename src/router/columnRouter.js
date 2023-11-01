@@ -4,6 +4,7 @@ import ColumnController from "../controllers/columnController.js";
 
 const router = new Router()
 
-router.patch('/edit',authMiddleware, ColumnController.editTask);
+router.patch('/edit',authMiddleware, ColumnController.editColumn);
+router.patch('/addnewtask',authMiddleware, ColumnController.addNewTask);
 
 export default router
