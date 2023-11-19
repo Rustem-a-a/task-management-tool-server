@@ -10,7 +10,6 @@ class ApiError extends Error{
         return new ApiError(401, 'Client unauthorized');
     }
 
-
     static BadRequest (message, errors = []){
         console.log('In BR');
         return new ApiError(400, message, errors);

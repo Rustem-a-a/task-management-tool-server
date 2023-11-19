@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import mpath from "mongoose-mpath";
 
 const commentSchema = new mongoose.Schema({
     text: {
@@ -24,6 +23,12 @@ const commentSchema = new mongoose.Schema({
         default:false
     },
     parentId:{
+        type:String
+    },
+    taskId: {
+        type:String
+    },
+    projectId: {
         type:String
     }
 

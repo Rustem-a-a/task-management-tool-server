@@ -10,20 +10,15 @@ class LoadingController {
     async uploadFile(req, res, next) {
         try {
             const file = req.file;
-            console.log(req.body.user.id)
-            console.log(req.body.taskId)
-            console.log(file)
-            console.log(1111)
-            const task = await Task.updateOne({_id: req.body.taskId}, {$push: {attachments: req.body.user.username+'_'+file.filename}})
-            console.log(22222222)
-            fs.rename('src/uploads/'+file.filename, 'src/uploads/'+req.body.user.username+'_'+file.filename, (err) => {
+            const attachmentsDate = Date.now();
+            fs.rename('src/uploads/'+file.filename, 'src/uploads/'+attachmentsDate+'_'+file.filename, (err) => {
                 if (err) {
-                    console.error(err);
                     throw ApiError.BadRequest('Ошибка при сохранении файла.');
                 }})
-            res.json({filename: file.filename})
+            const task = await Task.findOneAndUpdate({_id: req.body.taskId}, {$push: {attachments: attachmentsDate+'_'+file.filename}},{new:true})
+            res.status(201).json(task);
         } catch (e) {
-            next(e)
+            next(e);
 
         }
    }
@@ -31,16 +26,31 @@ class LoadingController {
     async downloadFile(req, res, next) {
         try {
             const filename = req.params.filename;
-            console.log(filename)
             const filePath = path.join(downloadDirectory, filename);
-            console.log(filePath)
             const fileExists = fs.existsSync(filePath);
             if (!fileExists) {
                 throw ApiError.BadRequest('Файл не найден');
             }
             res.download(filePath);
         } catch (e) {
-            next(e)
+            next(e);
+        }
+    };
+
+    async deleteFile(req, res, next) {
+        try {
+            const {taskId,filename} = req.params;
+            const task =await Task.findOneAndUpdate({_id:taskId}, {$pull: {attachments:filename}},{new:true})
+             await Task.findById(taskId)
+            const filePath = path.join(downloadDirectory, filename);
+                       const fileExists = fs.existsSync(filePath);
+            if (!fileExists) {
+                throw ApiError.BadRequest('Файл не найден');
+            }
+            fs.unlinkSync(filePath);
+            res.status(200).json(task);
+        } catch (e) {
+            next(e);
         }
     };
 }

@@ -3,14 +3,14 @@ import cors from 'cors'
 import 'dotenv/config'
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser'
-import authRouter from "./router/authRouter.js";
-import projectRouter from "./router/projectRouter.js";
-import taskRouter from "./router/taskRouter.js";
-import columnRouter from "./router/columnRouter.js";
-import errorMiddleware from "./middlewares/ErrorMiddleware.js";
-import commentRouter from "./router/commentRouter.js";
-import uploadRouter from './router/loadingRouter.js'
-const PORT = process.env.PORT || 5000;
+import authRouter from "./src/router/authRouter.js";
+import projectRouter from "./src/router/projectRouter.js";
+import taskRouter from "./src/router/taskRouter.js";
+import columnRouter from "./src/router/columnRouter.js";
+import errorMiddleware from "./src/middlewares/ErrorMiddleware.js";
+import commentRouter from "./src/router/commentRouter.js";
+import uploadRouter from './src/router/loadingRouter.js'
+const PORT = process.env.PORT || 4000;
 const app= express();
 
 

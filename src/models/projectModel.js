@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import Task from './taskModel.js'
-import User from "./userModel.js";
 
 const projectSchema = new mongoose.Schema({
     name: {

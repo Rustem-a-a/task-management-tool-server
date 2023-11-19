@@ -5,7 +5,6 @@ const columnSchema = new mongoose.Schema({
         'column-1': {
             id: {
                 type: String,
-                // unique: true,
                 required: true,
             },
             title: String,
@@ -14,7 +13,6 @@ const columnSchema = new mongoose.Schema({
         'column-2': {
             id: {
                 type: String,
-                // unique: true,
                 required: true,
             },
             title: String,
@@ -23,7 +21,6 @@ const columnSchema = new mongoose.Schema({
         'column-3': {
             id: {
                 type: String,
-                // unique: true,
                 required: true,
             },
             title: String,
@@ -31,14 +28,6 @@ const columnSchema = new mongoose.Schema({
         }
     }
 });
-//
-// const columnsSchema = new mongoose.Schema({
-//     columns: {
-//         type: Map,
-//         of: columnSchema,
-//     },
-// });
-
 
 const ColumnModel = mongoose.model('Column', columnSchema);
 export default ColumnModel;

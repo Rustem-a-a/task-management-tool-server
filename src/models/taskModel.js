@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import ApiError from "../exceptions/apiError.js";
 
 const taskSchema = new mongoose.Schema({
 
@@ -10,7 +9,6 @@ const taskSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        // required: true,
         default: 'Description'
 
     },
@@ -21,12 +19,10 @@ const taskSchema = new mongoose.Schema({
     start: {
         type: Date,
         default: Date.now(),
-        // required: true
     },
     workTime: {
         type: Date,
         default: Date.now(),
-        // required: true
     },
     deadline: {
         type: Date,

@@ -2,13 +2,12 @@ import Task from "../models/taskModel.js";
 import ApiError from "../exceptions/apiError.js";
 import Project from "../models/projectModel.js";
 import Column from "../models/columnModel.js";
+import Comment from "../models/commentModel.js";
 
 
 class TaskService{
 async createTask (task){
-    console.log('START')
     if(!task.parentId){
-        console.log(11111111111)
     const possibleTask = await Project
         .findById(task.projectId)
         .select('tasks -_id ')
@@ -23,30 +22,19 @@ async createTask (task){
     }
 
     if(task.parentId){
-        console.log(task)
         const possibleTask = await Task
             .findById(task.parentId)
             .select('subtasks -_id ')
             .populate({path: 'subtasks', select:'-_id title'})
-        console.log(possibleTask)
         if (possibleTask.subtasks.find(v=>v.title===task.title)) {
             throw ApiError.BadRequest( `Task with name ${task.title} has existed`);
         }
         const newTask = await Task.create({...task,author:task.user.id,child:true})
         const updatedTask = await Task.findOneAndUpdate({ _id: task.parentId}, { $push: { subtasks: newTask._id } },{new:true})
-        // const subtasks = await Task.findById(task.parentId).select('-_id subtasks').populate('subtasks')
-        // console.log(subtasks)
-        // return (subtasks)
-        console.log(newTask)
-
         const project = await Project.findOneAndUpdate({_id: task.projectId}, { $push: { tasks: newTask._id }},{new:true})
         const columns = await Column.findOne({_id:project.columnId})
-
         return ({newTask,updatedTask,columns})
     }
-
-
-
 }
 
 async edit (task){
@@ -57,7 +45,7 @@ async edit (task){
     const updatedTask = await Task.findByIdAndUpdate(task._id,task,{new:true})
     return updatedTask
 }
-    async delete ({projectId, taskId,parentId}) {
+    async delete ({projectId, taskId, parentId}) {
         const task = await Task.findById(taskId);
         if (!task) {
             throw ApiError.BadRequest( `Task with id ${taskId} not found`);
@@ -69,10 +57,21 @@ async edit (task){
                 { $pull: { subtasks: taskId } },
                 { new: true })
         }
-        await Project.findOneAndUpdate(
+        const project = await Project.findOneAndUpdate(
             { _id: projectId },
             { $pull: { tasks: taskId } },
             { new: true })
+        const column = await Column.findOne({_id:project.columnId})
+        let columnId = ''
+        Object.values(column.columns).forEach(value=>{
+            value.taskIds.map(v=>{
+                if(v===taskId){columnId=value.id}
+            })
+        })
+        const newcolumn = column.columns[columnId].taskIds.filter(v=>v!==taskId)
+        column.columns[columnId].taskIds=newcolumn
+        await column.save()
+        await Comment.deleteMany({taskId:taskId})
         return deletedTask
     }
 }

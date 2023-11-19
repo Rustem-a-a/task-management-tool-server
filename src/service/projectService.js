@@ -2,6 +2,7 @@ import Project from "../models/projectModel.js";
 import ApiError from "../exceptions/apiError.js";
 import Column from "../models/columnModel.js";
 import Task from "../models/taskModel.js";
+import Comment from "../models/commentModel.js";
 
 const exampleData = {
     columns: {
@@ -28,7 +29,6 @@ class ProjectService{
         if (possibleProject) {
             throw ApiError.BadRequest( `Project with name ${project.name} has existed`);
         }
-        console.log(11111)
         const columnsData = new Column({columns: exampleData.columns});
         const column = await columnsData.save()
         const createdProject = await Project.create({...project, author: project.user.id,columnId:column._id})
@@ -49,6 +49,7 @@ class ProjectService{
         }
         await Column.deleteMany({ _id: { $in: project.columnId} })
         await Task.deleteMany({ _id: { $in: project.tasks} })
+        await Comment.deleteMany({projectId:id})
         const deletedProject = await project.deleteOne()
         return deletedProject
     }

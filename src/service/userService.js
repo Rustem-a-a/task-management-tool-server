@@ -6,7 +6,6 @@ import MailService from "../service/mailService.js";
 import UserDto from "../dtos/userDto.js";
 import ApiError from "../exceptions/apiError.js";
 import tokenService from "../service/tokenService.js";
-import Token from "../models/tokenModel.js";
 
 class UserService{
     async registration ({username, email, password}){
@@ -19,7 +18,6 @@ class UserService{
         const user = await User.create({username,email,password:hashPassword,activationLink});
         await MailService.sendActivationMail(email,`${process.env.SERVER_URL}/auth/activate/${activationLink}`);
         const userDto = new UserDto(user);
-        console.log(userDto)
         const tokens = TokenService.generateToken({...userDto});
         await TokenService.saveToken(userDto.id,tokens.refreshToken);
         return {...tokens, user:userDto}

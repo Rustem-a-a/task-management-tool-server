@@ -1,7 +1,4 @@
-import User from '../models/userModel.js'
 import {validationResult} from "express-validator";
-import UserDto from '../dtos/userDto.js'
-import TokenService from "../service/tokenService.js";
 import UserService from "../service/userService.js";
 import ApiError from "../exceptions/apiError.js";
 import userService from "../service/userService.js";
